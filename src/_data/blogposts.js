@@ -4,7 +4,7 @@ const fetch = require("node-fetch");
 // Dato CMS token from .env
 const token = process.env.DATOCMS_TOKEN;
 
-// GraphQL query to execture
+// GraphQL query
 const blogpostsQuery = `
   {
     allBlogposts(orderBy: _createdAt_DESC, filter: {_status: {eq: published}}) {
@@ -42,7 +42,7 @@ function getAllBlogposts() {
 
     // Handle JSON data
     .then(res => {
-      // handle Dato CMS errors response
+      // handle Dato CMS errors if in response
       if (res.errors) {
         res.errors.forEach(error => {
           console.log(error.message);
