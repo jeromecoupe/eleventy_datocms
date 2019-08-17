@@ -1,0 +1,24 @@
+---
+permalink: index.html
+---
+
+{% extends "layouts/base.njk" %}
+
+{% set htmlTitle = "Homepage" %}
+
+{% block content %}
+  <h1>Blogposts</h1>
+  {% for item in blogposts %}
+    {% if loop.first %}<ul>{% endif %}
+      <li>
+        <p><img src="{{ item.image }}?fit=crop&amp;w=200&amp;h=200" alt="{{ item.imageAlt }}"></p>
+        <h2><a href="/blog/{{ item.slug }}">{{ item.title }}</a></h2>
+        <p><time datetime="{{ item.date | date('Y-M-DD') }}">{{ item.date|date("MMMM Do, Y") }}</time></p>
+        <p>{{ item.summary }}</p>
+      </li>
+    {% if loop.last %}</ul>{% endif %}
+  {% else %}
+    <p>No blogpost found</p>
+  {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,9 @@
+# mac stuff
+.DS_Store
+
+# node stuff
+node_modules/
+
+# eleventy
+.env
+dist/
