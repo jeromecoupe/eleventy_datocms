@@ -1,7 +1,7 @@
 // required packages
 const fetch = require("node-fetch");
 
-// Dato CMS token from .env
+// DatoCMS token
 const token = process.env.DATOCMS_TOKEN;
 
 // GraphQL query
@@ -17,6 +17,9 @@ const blogpostsQuery = `
       image {
         url
         alt
+      }
+      relatedBlogs {
+        id
       }
     }
   }
@@ -51,10 +54,10 @@ function getAllBlogposts() {
       }
 
       // get blogposts data from response
-      let blogpostsData = res.data.allBlogposts;
+      const blogpostsData = res.data.allBlogposts;
 
       // format data
-      let blogpostsFormatted = blogpostsData.map(item => {
+      const blogpostsFormatted = blogpostsData.map(item => {
         return {
           id: item.id,
           date: item._createdAt,
@@ -63,7 +66,8 @@ function getAllBlogposts() {
           image: item.image.url,
           imageAlt: item.image.alt,
           summary: item.intro,
-          body: item.body
+          body: item.body,
+          relatedBlogs: item.relatedBlogs
         };
       });
 

@@ -8,7 +8,7 @@ permalink: index.html
 
 {% block content %}
   <h1>Blogposts</h1>
-  {% for item in blogposts %}
+  {% for item in blogposts | limit(3) %}
     {% if loop.first %}<ul>{% endif %}
       <li>
         <p><img src="{{ item.image }}?fit=crop&amp;w=200&amp;h=200" alt="{{ item.imageAlt }}"></p>

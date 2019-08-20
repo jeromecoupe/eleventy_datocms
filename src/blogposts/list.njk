@@ -11,7 +11,7 @@ permalink: blog{% if pagination.pageNumber > 0 %}/page{{ pagination.pageNumber +
 {% block content %}
   <h1>Blogposts</h1>
 
-  {# loop through paginated #}
+  {# loop through paginated items #}
   {% for item in pagination.items %}
     {% if loop.first %}<ul>{% endif %}
       <li>
