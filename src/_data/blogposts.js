@@ -4,82 +4,92 @@ const fetch = require("node-fetch");
 // DatoCMS token
 const token = process.env.DATOCMS_TOKEN;
 
-// GraphQL query
-const blogpostsQuery = `
-  {
-    allBlogposts(orderBy: _createdAt_DESC, filter: {_status: {eq: published}}) {
-      id
-      title
-      slug
-      intro
-      body(markdown: true)
-      _createdAt
-      image {
-        url
-        alt
-      }
-      relatedBlogs {
-        id
-      }
-    }
-  }
-`;
-
 // get blogposts
 // see https://www.datocms.com/docs/content-delivery-api/first-request#vanilla-js-example
-function getAllBlogposts() {
-  // fetch data
-  const data = fetch("https://graphql.datocms.com/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      query: blogpostsQuery
-    })
-  })
-    // parse as JSON
-    .then(res => res.json())
+async function getAllBlogposts() {
+  // max number of records to fetch per query
+  const recordsPerQuery = 100;
 
-    // Handle JSON data
-    .then(res => {
-      // handle Dato CMS errors if in response
-      if (res.errors) {
-        res.errors.forEach(error => {
-          console.log(error.message);
-        });
-        throw new Error("DatoCMS errors");
-      }
+  // number of records to skip (we start at 0)
+  let recordsToSkip = 0;
 
-      // get blogposts data from response
-      const blogpostsData = res.data.allBlogposts;
+  // keep querying
+  let makeNewQuery = true;
 
-      // format data
-      const blogpostsFormatted = blogpostsData.map(item => {
-        return {
-          id: item.id,
-          date: item._createdAt,
-          title: item.title,
-          slug: item.slug,
-          image: item.image.url,
-          imageAlt: item.image.alt,
-          summary: item.intro,
-          body: item.body,
-          relatedBlogs: item.relatedBlogs
-        };
-      });
+  // Blogposts array
+  let blogposts = [];
 
-      // return formatted data
-      return blogpostsFormatted;
-    })
-    .catch(error => {
-      console.log(error);
+  while (makeNewQuery) {
+    // initiate fetch
+    const dato = await fetch("https://graphql.datocms.com/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        query: `{
+            allBlogposts(
+              first: ${recordsPerQuery},
+              skip: ${recordsToSkip},
+              orderBy: _createdAt_DESC,
+              filter: {
+                _status: {eq: published}
+              }
+            )
+            {
+              id
+              title
+              slug
+              intro
+              body(markdown: true)
+              _createdAt
+              image {
+                url
+                alt
+              }
+              relatedBlogs {
+                id
+              }
+            }
+          }`
+      })
     });
 
-  // return data
-  return data;
+    // store the JSON response when promise resolves
+    const response = await dato.json();
+
+    // update our blogpost array with the data from the JSON response
+    blogposts = blogposts.concat(response.data.allBlogposts);
+
+    // prepare for next query
+    recordsToSkip += recordsPerQuery;
+
+    // check if we are got back less than the records we fetch per query
+    // if yes, stop querying
+    if (response.data.allBlogposts.length < recordsPerQuery) {
+      makeNewQuery = false;
+    }
+  }
+
+  // format blogposts objects
+  const blogpostsFormatted = blogposts.map(item => {
+    return {
+      id: item.id,
+      date: item._createdAt,
+      title: item.title,
+      slug: item.slug,
+      image: item.image.url,
+      imageAlt: item.image.alt,
+      summary: item.intro,
+      body: item.body,
+      relatedBlogs: item.relatedBlogs
+    };
+  });
+
+  // return formatted blogposts
+  return blogpostsFormatted;
 }
 
 // export for 11ty
