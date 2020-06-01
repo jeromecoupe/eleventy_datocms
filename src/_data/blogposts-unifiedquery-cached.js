@@ -12,10 +12,10 @@ const cacheConfig = {
 };
 
 /**
- * Make DatoCMS request
+ * Request blogposts from DatoCMS
  * @param {Int} skipRecords - number or records to skip
  */
-async function makeDatoRequest(skipRecords = 0) {
+async function requestBlogposts(skipRecords = 0) {
   const request = await axios({
     url: "https://graphql.datocms.com/",
     method: "POST",
@@ -45,9 +45,9 @@ async function makeDatoRequest(skipRecords = 0) {
 }
 
 /**
- * Get blogposts
+ * Get all blogposts
  */
-async function getBlogposts() {
+async function getAllBlogposts() {
   // load cache
   let cache = flatCache.load(cacheConfig.file, cacheConfig.folder);
   const cachedItems = cache.getKey(cacheConfig.key);
@@ -63,36 +63,36 @@ async function getBlogposts() {
 
   // variables
   let moreRequests = [];
-  let allItems = [];
+  let apiItems = [];
 
   // make first request and push reults
-  const request = await makeDatoRequest();
-  allItems.push(request.data.allBlogposts);
+  const request = await requestBlogposts();
+  apiItems.push(request.data.allBlogposts);
 
   // use count to calculate if we need additonal
-  // queries to get everything
+  // requests to get everything
   let totalItems = request.data._allBlogpostsMeta.count;
   let additionalRequests = Math.ceil(totalItems / itemsPerRequest) - 1;
 
   // make additional requests
   for (let i = 1; i <= additionalRequests; i++) {
     let start = i * itemsPerRequest;
-    const request = makeDatoRequest(start);
+    const request = requestBlogposts(start);
     moreRequests.push(request);
   }
 
-  // make all queries
+  // execute all additional requests
   const allResults = await Promise.all(moreRequests);
   let moreBlogosts = allResults.map((result) => result.data.allBlogposts);
   moreBlogosts = moreBlogosts.flat();
-  allItems.push(moreBlogosts);
+  apiItems.push(moreBlogosts);
 
   // set and save cache
-  cache.setKey(cacheConfig.key, allItems);
+  cache.setKey(cacheConfig.key, apiItems);
   cache.save(true);
 
   // return API items
-  return allItems;
+  return apiItems;
 }
 
-module.exports = getBlogposts;
+module.exports = getAllBlogposts;
