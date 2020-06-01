@@ -52,7 +52,7 @@ async function getBlogposts() {
         title
       }
     }`;
-    const request = await makeDatoRequest(query);
+    const request = makeDatoRequest(query);
     allRequests.push(request);
     skip += itemsPerRequest;
   }
