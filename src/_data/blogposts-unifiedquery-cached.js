@@ -48,10 +48,6 @@ async function makeDatoRequest(skipRecords = 0) {
  * Get blogposts
  */
 async function getBlogposts() {
-  // variables
-  let moreRequests = [];
-  let allItems = [];
-
   // load cache
   let cache = flatCache.load(cacheConfig.file, cacheConfig.folder);
   const cachedItems = cache.getKey(cacheConfig.key);
@@ -65,6 +61,10 @@ async function getBlogposts() {
   // if we do not, make queries
   console.log("Getting blogposts from API");
 
+  // variables
+  let moreRequests = [];
+  let allItems = [];
+
   // make first request and push reults
   const request = await makeDatoRequest();
   allItems.push(request.data.allBlogposts);
@@ -73,12 +73,10 @@ async function getBlogposts() {
   // queries to get everything
   let totalItems = request.data._allBlogpostsMeta.count;
   let additionalRequests = Math.ceil(totalItems / itemsPerRequest) - 1;
-  console.log(`Additonal requests: ${additionalRequests}`);
 
   // make additional requests
   for (let i = 1; i <= additionalRequests; i++) {
     let start = i * itemsPerRequest;
-    console.log(`Starting at: ${start}`);
     const request = makeDatoRequest(start);
     moreRequests.push(request);
   }

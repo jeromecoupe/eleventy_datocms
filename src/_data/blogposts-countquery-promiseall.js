@@ -64,4 +64,4 @@ async function getBlogposts() {
   return allData;
 }
 
-// module.exports = getBlogposts;
+module.exports = getBlogposts;

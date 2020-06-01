@@ -98,4 +98,4 @@ async function getBlogposts() {
   return allItems;
 }
 
-// module.exports = getBlogposts;
+module.exports = getBlogposts;
