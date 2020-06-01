@@ -2,7 +2,7 @@
 const fetch = require("node-fetch");
 
 // max number of records to fetch per query
-const recordsPerQuery = 100;
+const recordsPerQuery = 1;
 
 // DatoCMS token
 const token = process.env.DATOCMS_TOKEN;

@@ -4,7 +4,7 @@ const path = require("path");
 const flatCache = require("flat-cache");
 
 // Config
-const itemsPerRequest = 100;
+const itemsPerRequest = 1;
 const cacheFolder = path.resolve("./_datacache");
 
 // make DatoCMS request
@@ -98,4 +98,4 @@ async function getBlogposts() {
   return allItems;
 }
 
-module.exports = getBlogposts;
+// module.exports = getBlogposts;

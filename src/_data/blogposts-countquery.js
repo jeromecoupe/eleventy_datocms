@@ -2,7 +2,7 @@
 const axios = require("axios");
 
 // Config
-const itemsPerRequest = 100;
+const itemsPerRequest = 1;
 
 // make dato request
 async function makeDatoRequest(query) {

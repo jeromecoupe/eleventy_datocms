@@ -4,7 +4,7 @@ const path = require("path");
 const flatCache = require("flat-cache");
 
 // Config
-const itemsPerRequest = 7;
+const itemsPerRequest = 1;
 const cacheConfig = {
   key: "blogposts",
   folder: path.resolve("./_datacache"),
@@ -72,11 +72,11 @@ async function getBlogposts() {
   // use count to calculate if we need additonal
   // queries to get everything
   let totalItems = request.data._allBlogpostsMeta.count;
-  let additionalRequests = Math.ceil(totalItems / itemsPerRequest);
-  console.log(`Additonal requests: ${additionalRequests - 1}`);
+  let additionalRequests = Math.ceil(totalItems / itemsPerRequest) - 1;
+  console.log(`Additonal requests: ${additionalRequests}`);
 
   // make additional requests
-  for (let i = 1; i < additionalRequests; i++) {
+  for (let i = 1; i <= additionalRequests; i++) {
     let start = i * itemsPerRequest;
     console.log(`Starting at: ${start}`);
     const request = makeDatoRequest(start);
@@ -93,6 +93,7 @@ async function getBlogposts() {
   cache.setKey(cacheConfig.key, allItems);
   cache.save(true);
 
+  // return API items
   return allItems;
 }
 
