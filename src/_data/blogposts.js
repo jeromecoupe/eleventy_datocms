@@ -1,15 +1,15 @@
 // required packages
 const fetch = require("node-fetch");
 
+// max number of records to fetch per query
+const recordsPerQuery = 100;
+
 // DatoCMS token
 const token = process.env.DATOCMS_TOKEN;
 
 // get blogposts
 // see https://www.datocms.com/docs/content-delivery-api/first-request#vanilla-js-example
 async function getAllBlogposts() {
-  // max number of records to fetch per query
-  const recordsPerQuery = 100;
-
   // number of records to skip (we start at 0)
   let recordsToSkip = 0;
 
@@ -26,7 +26,7 @@ async function getAllBlogposts() {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         query: `{
@@ -53,8 +53,8 @@ async function getAllBlogposts() {
                 id
               }
             }
-          }`
-      })
+          }`,
+      }),
     });
 
     // store the JSON response when promise resolves
@@ -66,7 +66,7 @@ async function getAllBlogposts() {
     // prepare for next query
     recordsToSkip += recordsPerQuery;
 
-    // check if we are got back less than the records we fetch per query
+    // check if we got back less than the records we fetch per query
     // if yes, stop querying
     if (response.data.allBlogposts.length < recordsPerQuery) {
       makeNewQuery = false;
@@ -74,7 +74,7 @@ async function getAllBlogposts() {
   }
 
   // format blogposts objects
-  const blogpostsFormatted = blogposts.map(item => {
+  const blogpostsFormatted = blogposts.map((item) => {
     return {
       id: item.id,
       date: item._createdAt,
@@ -84,7 +84,7 @@ async function getAllBlogposts() {
       imageAlt: item.image.alt,
       summary: item.intro,
       body: item.body,
-      relatedBlogs: item.relatedBlogs
+      relatedBlogs: item.relatedBlogs,
     };
   });
 
