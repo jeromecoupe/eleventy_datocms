@@ -7,3 +7,4 @@ node_modules/
 # eleventy
 .env
 dist/
+_datacache
