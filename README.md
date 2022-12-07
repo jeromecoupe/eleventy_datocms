@@ -8,9 +8,8 @@ Using Dato CMS in this case.
 
 Create a DatoCMS account.
 
-
+- copy `.env.example` and rename as `.env`
+- add your Dato CMS API Key to your new `.env` file
 - run `npm install`
 - run `npx eleventy`
 - run `npx eleventy --serve`
-
-
