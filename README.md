@@ -11,5 +11,5 @@ Create a DatoCMS account.
 - copy `.env.example` and rename as `.env`
 - add your Dato CMS API Key to your new `.env` file
 - run `npm install`
-- run `npx eleventy`
-- run `npx eleventy --serve`
+- run `npm run build` to delete the cache folder, load data from API and build the site
+- run `npm runn dev` to spin a dev server and load data from cache (unless you delete the cache file / folder)

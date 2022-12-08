@@ -3,7 +3,12 @@
   "version": "0.0.1",
   "description": "Test Eleventy with Dato CMS",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf \"./dist\" \"./_datacache\"",
+    "build:eleventy": "npx @11ty/eleventy --quiet",
+    "serve:eleventy": "npx @11ty/eleventy --serve --quiet",
+    "watch:eleventy": "npx @11ty/eleventy --watch",
+    "build": "npm-run-all clean build:eleventy",
+    "dev": "npm run serve:eleventy"
   },
   "author": "Jérôme Coupé",
   "license": "MIT",
@@ -15,6 +20,8 @@
     "dotenv": "^16.0.3",
     "flat-cache": "^3.0.4",
     "moment": "^2.29.4",
-    "node-fetch": "^3.3.0"
+    "node-fetch": "^3.3.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
   }
 }

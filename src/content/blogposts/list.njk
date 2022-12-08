@@ -1,7 +1,7 @@
 ---
 pagination:
   data: blogposts
-  size: 2
+  size: 5
 permalink: blog{% if pagination.pageNumber > 0 %}/page{{ pagination.pageNumber + 1}}{% endif %}/index.html
 ---
 
@@ -24,15 +24,16 @@ permalink: blog{% if pagination.pageNumber > 0 %}/page{{ pagination.pageNumber +
   {% endfor %}
 
   {# pagination #}
-  {% if pagination.hrefs | length > 0 %}
-  <ul>
+  {% if pagination.hrefs|length > 0 %}
+  <p>
+    Page {{ pagination.pageNumber + 1 }} of {{ pagination.hrefs|length }}
     {% if pagination.previousPageHref %}
-      <li><a href="{{ pagination.previousPageHref }}">Previous page</a></li>
+      <a href="{{ pagination.previousPageHref }}">Previous page</a>
     {% endif %}
     {% if pagination.nextPageHref %}
-      <li><a href="{{ pagination.nextPageHref }}">Next page</a></li>
+      <a href="{{ pagination.nextPageHref }}">Next page</a>
     {% endif %}
-  </ul>
+  </p>
   {% endif %}
 
 {% endblock %}
