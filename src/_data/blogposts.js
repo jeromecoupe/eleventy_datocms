@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const flatCache = require("flat-cache");
 
 // Config
-const ITEMS_PER_REQUEST = 1;
+const ITEMS_PER_REQUEST = 10;
 const CACHE_KEY = "blogposts";
 const CACHE_FOLDER = path.resolve("./_datacache");
 const CACHE_FILE = "blogposts.json";
@@ -129,7 +129,7 @@ async function getAllBlogposts() {
   // additional requests in parallel
   try {
     const allResults = await Promise.all(requests);
-    allResults.map((result) => {
+    allResults.forEach((result) => {
       apiData.push(...result.data.allBlogposts);
     });
   } catch (err) {
